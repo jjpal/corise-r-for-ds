@@ -31,6 +31,7 @@ tbl_names <- readr::read_csv(file_path_names, show_col_types = FALSE)
 # Print tbl_names
 tbl_names
 ```
+<img src="table1_tbl_names.PNG?raw=true"/>
 
 #### Lifetables
 
@@ -122,6 +123,7 @@ tbl_lifetables <- readr::read_csv(file_lifetables, show_col_types = FALSE)
 # Print `tbl_lifetables`
 tbl_lifetables
 ```
+<img src="table2_tbl_lifetables.PNG?raw=true"/>
 
 It is always a good idea to plot the data to understand it better. Given
 that this is a table of probabilities of survival, let us plot the
@@ -200,6 +202,7 @@ tbl_lifetables_extended <- tbl_lifetables |>
 
 tbl_lifetables_extended
 ```
+<img src="table3_tbl_lifetables_extended.PNG?raw=true"/>
 
 We can get the probability that a person has survived till 2022 by
 filtering `tbl_lifetables_extended` for rows where `year + age = 2022`.
@@ -257,6 +260,7 @@ tbl_names_extended <- tbl_names |>
 
 tbl_names_extended
 ```
+<img src="table4_tbl_names_extended.PNG?raw=true"/>
 
 ### Model Data
 
@@ -293,6 +297,7 @@ tbl_names_extended |>
   # Estimate age stats
   estimate_age_stats()
 ```
+<img src="table5__tbl_filtered_name.PNG?raw=true"/>
 
 Let us write another function that plots the age distribution for a
 person based on their `name` and `sex`. We can then use this function to
@@ -372,6 +377,7 @@ tbl_names_female_top_25 <- tbl_names |>
 # Print `tbl_names_female_top_25`
   tbl_names_female_top_25
 ```
+<img src="table6_tbl_names_female_top_25.PNG?raw=true"/>
 
 Let us join `tbl_names_extended` with `tbl_names_female_top_25` so that
 we only keep rows corresponding to the top 25 female names.
@@ -391,6 +397,7 @@ tbl_names_extended_age <- tbl_names_extended |>
 
 tbl_names_extended_age
 ```
+<img src="table7_tbl_names_extended_age.PNG?raw=true"/>
 
 We can now replicate the plot published by FiveThirtyEight by adding a
 point for the median age and a segment to represent the 25th and 75th
