@@ -149,6 +149,7 @@ tbl_lifetables |>
   # Update theme to move plot title
   theme(plot.title.position = 'plot')
 ```
+<img src="Distribution_People.png?raw=true"/>
 
 Looking at the plot, we gather that a male born in 1950 has almost a 50%
 chance of being alive in 2022. Notice that `tbl_lifetable` only has
@@ -229,6 +230,7 @@ tbl_lifetables_extended_2022 |>
   # Update theme to move plot title
   theme(plot.title.position = 'plot')
 ```
+<img src="Distribution_People_Alive_Extended.png?raw=true"/>
 
 Note how imputing the data provides more realistic estimates of the
 probabilities as seen by comparing the smooth curve with the steps.
@@ -349,6 +351,7 @@ plot_estimated_age <- function(tbl, my_name, my_sex) {
 tbl_names_extended |> 
   plot_estimated_age("Anna", "F")
 ```
+<img src="Age_Distribution_Fem.png?raw=true"/>
 
 Let us now get the top 25 most popular names for Females.
 
@@ -428,3 +431,5 @@ tbl_names_extended_age |>
     panel.background = element_rect(fill = '#f0f0f0')
   )
 ```
+<img src="Median_Age_Fem.png?raw=true"/>
+
