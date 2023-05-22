@@ -105,7 +105,7 @@ tbl_names_popular |>
   # Add labels (title, subtitle, caption, x, y)
   labs(
     title = 'Popular US Babynames',
-    subtitle = 'Years 2011-2019',
+    subtitle = 'Years 2011-2020',
     caption = 'source: Social Security Administration',
     x = 'Number Of Births',
     y = 'Names'
