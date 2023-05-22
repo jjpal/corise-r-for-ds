@@ -422,27 +422,43 @@ letter combinations and how they have evolved over the years.
 ``` r
 tbl_names_by_first_and_last_letter = tbl_names |> 
   # Filter for sex = "F"
-  
+  filter(sex == "F") |> 
   # Group by `first_letter`, `last_letter`, and `year`
-  
+  group_by(first_letter, last_letter, year) |> 
   # Summarize total number of births
-  
-  
-  
-  
+  summarize(nb_births = sum(nb_births)) |> 
   # Group by `year`
-  
+  group_by(year) |> 
   # Add NEW column pct_births by dividing nb_births by sum(nb_births)
-
+  mutate(pct_births = nb_births / sum(nb_births)) |> 
   # Ungroup data
+  ungroup()
+```
 
+    #> `summarise()` has grouped output by 'first_letter', 'last_letter'. You can
+    #> override using the `.groups` argument.
 
+``` r
 tbl_names_by_first_and_last_letter
 ```
 
-    #> Error: The pipe operator requires a function call as RHS (<text>:18:1)
+    #> # A tibble: 43,579 × 5
+    #>    first_letter last_letter  year nb_births pct_births
+    #>    <chr>        <chr>       <dbl>     <dbl>      <dbl>
+    #>  1 A            A            1880      4784     0.0526
+    #>  2 A            A            1881      4966     0.0540
+    #>  3 A            A            1882      5728     0.0531
+    #>  4 A            A            1883      6051     0.0539
+    #>  5 A            A            1884      7038     0.0546
+    #>  6 A            A            1885      7203     0.0541
+    #>  7 A            A            1886      7785     0.0539
+    #>  8 A            A            1887      7814     0.0535
+    #>  9 A            A            1888      9444     0.0529
+    #> 10 A            A            1889      9365     0.0525
+    #> # ℹ 43,569 more rows
 
 #### Visualize
+
 
 Now, you will visualize the distribution of `pct_births` by
 `last_letter` and `first_letter` by plotting a heatmap of the percentage
@@ -451,18 +467,19 @@ of births by first letter and last letter for the year 2021.
 ``` r
 tbl_names_by_first_and_last_letter |> 
   # Filter for the year 2021
-  
+  filter(year == 2021) |> 
   # Initialize a ggplot of last_letter vs. first_letter
-  
+  ggplot(aes(x = first_letter, y = last_letter)) +
   # Add a `geom_tile` layer with fill mapped to pct_births
-  
+  geom_tile(aes(fill=pct_births)) +
   # Add labels (title, subtitle, x, y, fill)
- 
-  
-  
-  
-
-
+  labs(
+      title = "Distribution of % births by last_letter and first_letter",
+      subtitle = "Heatmap for the year 2021",
+      x = "Last Letter",
+      y = "First Letter",
+      fill = "Percent Births"
+    ) +
 
   # Update fill scale to use Viridis colors
   scale_fill_viridis_b(direction = -1) +
@@ -474,7 +491,7 @@ tbl_names_by_first_and_last_letter |>
   )
 ```
 
-    #> Error in eval(expr, envir, enclos): object 'tbl_names_by_first_and_last_letter' not found
+<img src="img/question-4-visualize-1.png" width="100%" style="display: block; margin: auto;" />
 
 ### Question 5: \[Vowels vs Consonants\] Are there naming trends in usage of vowels and consonants?
 
@@ -505,29 +522,39 @@ get_letter_type <- function(letter) {
 
 tbl_names_vowel_consonant <- tbl_names |> 
   # Add NEW column named `first_letter_type`
-  
+  mutate(first_letter_type = get_letter_type(first_letter)) |> 
   # Add NEW column named `last_letter_type`
-  
+  mutate(last_letter_type = get_letter_type(last_letter)) |>
   # Group by `sex`, `year`, `first_letter_type` and `last_letter_type`
-  
+  group_by(sex, year, first_letter_type, last_letter_type) |>
   # Summarize the total number of births
-  
-  
-  
-  
+  summarize(nb_births = sum(nb_births), .groups = "drop") |> 
   # Group by `sex` and` `year`
-  
+  group_by(sex, year) |>
   # Add NEW column with `pct_births` calculated as `nb_births / sum(nb_births)`
-   
+  mutate(pct_births = nb_births / sum(nb_births)) |> 
   # Ungroup the data
-  
+  ungroup() |>
   # Unite `first_letter_type` and `last_letter_type` into a NEW column named `first_last`
- 
+  unite(first_last, first_letter_type, last_letter_type)
 
 tbl_names_vowel_consonant
 ```
 
-    #> Error: The pipe operator requires a function call as RHS (<text>:27:1)
+    #> # A tibble: 1,136 × 5
+    #>    sex    year first_last          nb_births pct_births
+    #>    <chr> <dbl> <chr>                   <dbl>      <dbl>
+    #>  1 F      1880 consonant_consonant     19988     0.220 
+    #>  2 F      1880 consonant_vowel         46765     0.514 
+    #>  3 F      1880 vowel_consonant          5708     0.0627
+    #>  4 F      1880 vowel_vowel             18533     0.204 
+    #>  5 F      1881 consonant_consonant     20069     0.218 
+    #>  6 F      1881 consonant_vowel         47287     0.514 
+    #>  7 F      1881 vowel_consonant          5669     0.0617
+    #>  8 F      1881 vowel_vowel             18928     0.206 
+    #>  9 F      1882 consonant_consonant     23561     0.218 
+    #> 10 F      1882 consonant_vowel         55449     0.514 
+    #> # ℹ 1,126 more rows
 
 #### Visualize
 
@@ -541,20 +568,19 @@ tbl_names_vowel_consonant |>
   # Reorder `first_last` by the median `pct_births`
   mutate(first_last = fct_reorder(first_last, pct_births, median)) |>
   # Initialize a ggplot of `pct_births` vs. `year`
-  
+  ggplot(aes(x = year, y = pct_births)) +
   # Add an area layer with fill = first_last
-  
+  geom_area(aes(fill=first_last)) +
   # Facet wrap plot by `sex`
-  
+  facet_wrap(~ sex) +
   # Add labels (title, subtitle, caption, x, y)
-  
-  
-  
-  
-
-
-
-
+  labs(
+      title = "Usage of Vowels And Consonants Trends",
+      subtitle = " in Names Over Time",
+      caption = "Source: SAA",
+      x = "Year",
+      y = "Percent Births"
+  ) +
   # Clean up x and y axis scales
   scale_x_continuous(
     expand = c(0, 0)
@@ -572,7 +598,7 @@ tbl_names_vowel_consonant |>
   )
 ```
 
-    #> Error in eval(expr, envir, enclos): object 'tbl_names_vowel_consonant' not found
+<img src="img/question-5-visualize-1.png" width="100%" style="display: block; margin: auto;" />
 
 ------------------------------------------------------------------------
 
